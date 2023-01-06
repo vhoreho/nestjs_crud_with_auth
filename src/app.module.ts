@@ -4,6 +4,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
+import { MallModule } from './mall/mall.module';
+import { Mall } from './mall/mall.entity';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [
@@ -16,9 +19,11 @@ import { User } from './users/users.entity';
       username: 'postgres',
       password: 'root',
       database: 'user_db',
-      entities: [User],
+      entities: [User, Mall],
       synchronize: true,
     }),
+    MallModule,
+    StoreModule,
   ],
   controllers: [AppController],
   providers: [],
