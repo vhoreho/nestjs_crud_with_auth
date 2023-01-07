@@ -8,9 +8,9 @@ export class User {
   @Column()
   username: string;
 
+  @Column({ nullable: true })
+  password: string;
+
   @Column()
   email: string;
-
-  @Column({ default: true })
-  isActive: boolean;
 }

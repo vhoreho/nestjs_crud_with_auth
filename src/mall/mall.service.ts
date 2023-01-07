@@ -9,23 +9,30 @@ export class MallService {
     @InjectRepository(Mall) private mallRepository: Repository<Mall>,
   ) {}
 
-  createMall(name: string): Promise<Mall> {
-    return this.mallRepository.save({ name });
+  async createMall(name: string): Promise<Mall> {
+    return await this.mallRepository.save({ name });
   }
 
-  findAllMalls(): Promise<Mall[]> {
-    return this.mallRepository.find();
+  async findAllMalls(): Promise<Mall[]> {
+    return await this.mallRepository.find({
+      relations: {
+        stores: true,
+      },
+    });
   }
 
-  findMall(id: number): Promise<Mall> {
-    return this.mallRepository.findOneBy({ id });
+  async findMall(id: number): Promise<Mall> {
+    return await this.mallRepository.findOne({
+      where: { id },
+      relations: ['stores'],
+    });
   }
 
-  updateMall(id: number, name: string): Promise<any> {
-    return this.mallRepository.update({ id }, { name });
+  async updateMall(id: number, name: string): Promise<any> {
+    return await this.mallRepository.update({ id }, { name });
   }
 
-  deleteMall(id: number): Promise<any> {
-    return this.mallRepository.delete({ id });
+  async deleteMall(id: number): Promise<any> {
+    return await this.mallRepository.delete({ id });
   }
 }

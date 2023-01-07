@@ -1,6 +1,8 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -9,15 +11,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(user: any) {
-    const result = await this.usersService.findUser(user.email);
-    if (!result)
-      throw new BadRequestException('User with same email does not exist');
-
+  async login(user: User) {
     const payload = {
-      username: result.username,
-      email: result.email,
-      active: result.isActive,
+      username: user.username,
+      email: user.email,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -25,21 +22,27 @@ export class AuthService {
     };
   }
 
-  async register(user: any) {
-    const payload = {
-      username: user.username,
-      sub: user.id,
-      email: user.email,
-    };
+  async register(
+    username: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
+    return await this.usersService.registerUser(username, email, password);
+  }
 
-    await this.usersService.registerUser({
-      email: user.email,
-      username: user.username,
-    });
+  async validateUser(username: string, password: string): Promise<User> {
+    const foundUser = await this.usersService.findUser(username);
 
-    return {
-      access_token: this.jwtService.sign(payload),
-      payload,
-    };
+    if (!foundUser) {
+      throw new BadRequestException('User not found');
+    }
+
+    const validatePass = await bcrypt.compare(password, foundUser.password);
+
+    if (foundUser && validatePass) {
+      return foundUser;
+    }
+
+    return null;
   }
 }
