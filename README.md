@@ -1,7 +1,6 @@
-Simple CRUD application with authorization feature
+Simple CRUD application with authorization feature.
 
 Used technologies:
-
-### Nest JS
-### Postgres
-### Swagger API
+- Nest JS
+- Postgres
+- Swagger API
