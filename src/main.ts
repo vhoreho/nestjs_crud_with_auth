@@ -3,7 +3,12 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  console.log('Bootstrap start');
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  });
+
+  console.log('Bootstrap after app');
 
   const config = new DocumentBuilder()
     .setTitle('Mall')
@@ -15,6 +20,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  console.log('Bootstrap after build');
+  await app.listen(80);
 }
+
 bootstrap();

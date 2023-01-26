@@ -7,6 +7,7 @@ import { MallModule } from './mall/mall.module';
 import { Mall } from './mall/mall.entity';
 import { StoreModule } from './store/store.module';
 import { Store } from './store/store.entity';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -14,18 +15,19 @@ import { Store } from './store/store.entity';
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'uhserver.postgres.database.azure.com',
       port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'user_db',
+      username: 'uhadmin',
+      password: 'UHServer$',
+      database: 'postgres',
       entities: [User, Mall, Store],
-      synchronize: true,
+      synchronize: false,
+      ssl: true,
     }),
     MallModule,
     StoreModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
